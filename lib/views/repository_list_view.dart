@@ -156,8 +156,10 @@ class RepositoryListViewState extends State<RepositoryListView> {
                                   if (mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text(
-                                              'Repository deleted successfully')),
+                                        content: Text(
+                                            'Repository deleted successfully'),
+                                        backgroundColor: Colors.red,
+                                      ),
                                     );
                                   }
                                 }

@@ -89,7 +89,10 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
           await _controller.createRepository(repository);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Repository added successfully!')),
+              const SnackBar(
+                content: Text('Repository added successfully!'),
+                backgroundColor: Colors.green, // Green background for success
+              ),
             );
           }
         } else {
@@ -97,7 +100,10 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
           await _controller.updateRepository(repository);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Repository updated successfully!')),
+              const SnackBar(
+                content: Text('Repository updated successfully!'),
+                backgroundColor: Colors.green,
+              ),
             );
           }
         }
@@ -107,8 +113,12 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Error: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       }
     }
