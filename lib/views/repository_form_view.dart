@@ -85,9 +85,21 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
 
       try {
         if (widget.repository == null) {
+          // Add new repository
           await _controller.createRepository(repository);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Repository added successfully!')),
+            );
+          }
         } else {
+          // Update existing repository
           await _controller.updateRepository(repository);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Repository updated successfully!')),
+            );
+          }
         }
         widget.refresh();
         if (mounted) {
