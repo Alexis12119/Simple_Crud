@@ -48,6 +48,33 @@ class RepositoryListViewState extends State<RepositoryListView> {
     }
   }
 
+  Future<bool> _showDeleteConfirmationDialog(String repositoryName) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Confirm Deletion'),
+              content:
+                  Text('Are you sure you want to delete "$repositoryName"?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // Default to false if the dialog is dismissed.
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +148,19 @@ class RepositoryListViewState extends State<RepositoryListView> {
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () async {
-                                await _controller.deleteRepository(repo.id!);
+                                final confirm =
+                                    await _showDeleteConfirmationDialog(
+                                        repo.name);
+                                if (confirm) {
+                                  await _controller.deleteRepository(repo.id!);
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Repository deleted successfully')),
+                                    );
+                                  }
+                                }
                               },
                             ),
                           ],
