@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../controllers/repository_controller.dart';
-import '../models/repository_model.dart';
-import 'repository_form_view.dart';
+import 'package:repo_ms/controllers/repository_controller.dart';
+import 'package:repo_ms/models/repository_model.dart';
+import 'package:repo_ms/views/repository_form_view.dart';
+import 'package:url_launcher/url_launcher.dart' show canLaunchUrl, launchUrl;
 
 class RepositoryListView extends StatefulWidget {
   const RepositoryListView({super.key});
@@ -14,23 +14,6 @@ class RepositoryListView extends StatefulWidget {
 class RepositoryListViewState extends State<RepositoryListView> {
   final RepositoryController _controller = RepositoryController();
   late Stream<List<Repository>> _repositoryStream;
-
-  @override
-  void initState() {
-    super.initState();
-    _repositoryStream = _controller.subscribeToRepositories();
-  }
-
-  void _openUrl(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Could not open URL')));
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,5 +87,22 @@ class RepositoryListViewState extends State<RepositoryListView> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _repositoryStream = _controller.subscribeToRepositories();
+  }
+
+  void _openUrl(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Could not open URL')));
+      }
+    }
   }
 }

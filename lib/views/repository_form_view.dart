@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controllers/repository_controller.dart';
-import '../models/repository_model.dart';
+import 'package:repo_ms/controllers/repository_controller.dart';
+import 'package:repo_ms/models/repository_model.dart';
 
 class RepositoryFormView extends StatefulWidget {
   final Repository? repository;
@@ -19,43 +19,6 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
   late String _name;
   late String _description;
   late String _url;
-
-  @override
-  void initState() {
-    super.initState();
-    _name = widget.repository?.name ?? '';
-    _description = widget.repository?.description ?? '';
-    _url = widget.repository?.url ?? '';
-  }
-
-  void _saveRepository() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      final repository = Repository(
-        id: widget.repository?.id, // Null for new entries
-        name: _name,
-        description: _description,
-        url: _url,
-      );
-
-      try {
-        if (widget.repository == null) {
-          await _controller.createRepository(repository);
-        } else {
-          await _controller.updateRepository(repository);
-        }
-        widget.refresh();
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Error: $e')));
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,5 +63,42 @@ class RepositoryFormViewState extends State<RepositoryFormView> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _name = widget.repository?.name ?? '';
+    _description = widget.repository?.description ?? '';
+    _url = widget.repository?.url ?? '';
+  }
+
+  void _saveRepository() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final repository = Repository(
+        id: widget.repository?.id, // Null for new entries
+        name: _name,
+        description: _description,
+        url: _url,
+      );
+
+      try {
+        if (widget.repository == null) {
+          await _controller.createRepository(repository);
+        } else {
+          await _controller.updateRepository(repository);
+        }
+        widget.refresh();
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Error: $e')));
+        }
+      }
+    }
   }
 }
