@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RepositoryController {
   final SupabaseClient supabase = Supabase.instance.client;
-
   Future<void> createRepository(Repository repository) async {
     await supabase.from('repositories').insert(repository.toMap());
   }
@@ -15,6 +14,14 @@ class RepositoryController {
   Future<List<Repository>> fetchRepositories() async {
     final response = await supabase.from('repositories').select();
     return (response as List).map((repo) => Repository.fromMap(repo)).toList();
+  }
+
+  // Fetch repositories matching the search query
+  Future<List<Repository>> searchRepositories(String query) async {
+    final response =
+        await supabase.from('repositories').select().ilike('name', '%$query%');
+
+    return (response as List).map((item) => Repository.fromMap(item)).toList();
   }
 
   Stream<List<Repository>> subscribeToRepositories() {
